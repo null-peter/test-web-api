@@ -1,6 +1,8 @@
 // dotnet add package Swashbuckle.AspNetCore
 using Microsoft.OpenApi.Models;
 
+using Api.Db;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer(); // for minimal api support
 builder.Services.AddSwaggerGen(c =>
@@ -29,6 +31,17 @@ app.MapGet("/", () => "Hello World!");
 /* cors allows a to securely share data/content from another web domain the server is running from */
 /* Unable to resolve service for type 'Microsoft.AspNetCore.Cors.Infrastructure.ICorsService' while attempting to activate 'Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware' */
 //app.UseCors("passkey");
+
+/* get data by id */
+app.MapGet("/data/{id}", (int Id) => DataDb.GetData(Id));
+/* get all data */
+app.MapGet("/data", () => DataDb.GetData());
+/* create new data */ 
+app.MapPost("/data", (Data data) => DataDb.CreateData(data));
+/* update data by id */
+app.MapPut("/data", (Data data) => DataDb.UpdateData(data));
+/* remove data */
+app.MapDelete("/data/{id}", (int Id) => DataDb.DeleteData(Id));
 
 /* by default the app will run on http://localhost:{port} where port is any between 5000 to 5300 */
 app.Run();
